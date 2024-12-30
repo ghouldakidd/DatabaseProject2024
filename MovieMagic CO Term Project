@@ -1,0 +1,146 @@
+Create Table Theatre(
+TheatreName varchar2(20) NOT NULL,
+MovieTitle varchar2(15) NOT NULL,
+FranchiseLocation varchar2(30) NOT NULL,
+NumberOfAuditoriums number(2) NOT NULL,
+Primary Key (TheatreName, MovieTitle),
+Constraint CHK_TN Check(TheatreName in ('AMC', 'Regal', 'Cinemark')),
+Foreign Key (MovieTitle) References Movie
+);
+
+Create Table Showtimes(
+ShowtimeID number(3) NOT NULL,
+MovieTitle varchar2(15) NOT NULL,
+FilmFormat varchar2(5) NOT NULL,
+TheatreName varchar2(20) NOT NULL,
+FranchiseLocation varchar2(30) NOT NULL,
+MoviePrice varchar2(5) NOT NULL,
+Showtimes varchar2(5) NOT NULL,
+Primary Key (ShowtimeID, MovieTitle, FilmFormat),
+Constraint CHK_TN Check(TheatreName in ('AMC', 'Regal', 'Cinemark')),
+Foreign Key (MovieTitle) References Movie
+);
+
+Create Table TheatreServices(
+ServiceID number(6) NOT NULL,
+DisabilityServices varchar2(12) NOT NULL,
+ConcessionsOffered varchar2(12) NOT NULL,
+SeatType varchar2(10) NOT NULL,
+Waiters varchar2(12) NOT NULL,
+Primary Key (ServiceID)
+);
+
+Create Table Movie(
+MovieTitle varchar2(10) NOT NULL,
+IMDbScore varchar2(6),
+RottenTomatoScore varchar2(3),
+Genre varchar2(7) NOT NULL,
+FilmRating varchar2(5) NOT NULL,
+MovieSalesGross varchar2(10) NOT NULL,
+RuntimeMinutes number(3) NOT NULL,
+Primary Key (MovieTitle),
+Constraint CHK_FR Check (FilmRating in ('G', 'PG', 'PG-13', 'R', 'NC-17', 'NR'))
+);
+
+Create Table Employee(
+EmployeeID number(6) NOT NULL,
+FirstName varchar2(10) NOT NULL,
+LastName varchar2(15) NOT NULL,
+PositionTitle varchar2(7) NOT NULL,
+Salary number(6) NOT NULL,
+Tenure varchar2(8) NOT NULL,
+Primary Key (EmployeeID),
+Constraint CHK_PT Check (PositionTitle in ('DB Developer', 'Customer Service', 'Manager', 'CEO', 'CFO', 'COO'))
+);
+
+Create Table Customer(
+UserName varchar2(10) NOT NULL,
+PhoneNumber varchar2(12),
+EmailAddress varchar2(25) NOT NULL,
+CustomerAddress varchar2(20) NOT NULL,
+FavGenre varchar2(20),
+DesiredMovieLengthMinutes number(3),
+Primary Key (UserName),
+Constraint CHK_FG Check (FavGenre in ('Comedy', 'Action', 'Adventure', 'Drama', 'Western', 'Thriller', 'Horror', 'Romance', 'Science Fiction', 'Fantasy', 'Historical', 'Musical'))
+);
+
+
+Create Table Ticket(
+ShowtimeID number(3) NOT NULL,
+MovieTitle varchar2(15) NOT NULL,
+FilmFormat varchar2(5) NOT NULL,
+UserName varchar2(10) NOT NULL,
+TheatreName varchar2(25) NOT NULL,
+NumSeats number(2) NOT NULL,
+SeaLocation varchar2(4) NOT NULL,
+Primary Key (ShowtimeID, MovieTitle, FilmFormat, UserName),
+Constraint CHK_FF Check (FilmFormat in ('Standard', '3D', 'IMAX')),
+Constraint CHK_TN Check (TheatreName in ('AMC', 'Regal', 'Cinemark', 'Cineplex')),
+Foreign Key (UserName) References Customer,
+Foreign Key (MovieTitle) References Movie,
+Foreign Key (ShowtimeID, MovieTitle, FilmFormat) References Showtimes
+);
+
+/* Insert */
+INSERT INTO Movie VALUES ('Wicked', '8.1/10', '92%', 'Musical', 'PG', '$359.2M', 160);
+INSERT INTO Movie VALUES ('Venom: The Last Dance', '6.2/10', '61%', 'Action', 'PG-13', '$468.2M', 110);
+INSERT INTO Movie VALUES ('Moana 2', '7.1/10', '76%', 'Musical', 'PG', '$386.3M', 100);
+INSERT INTO Movie VALUES ('Gladiator II', '6.9/10', '77%', 'Action', 'R', '$320M', 148);
+INSERT INTO Movie VALUES ('Juror #2', '7.3/10', '92%', 'Thriller', 'PG-13', '$16.3M', 114);
+
+INSERT INTO Showtimes VALUES(1, 'Wicked', 'IMAX', 'AMC', '8141 Honeygo Blvd, Baltimore, MD, 21236', 26.33, 'Wednesday 6:00PM');
+INSERT INTO Showtimes VALUES(2, 'Moana 2', 'Standard', 'Cinemark', '111 East Joppa Road, Towson, MD, 21286', 9.34, 'Tuesday 11:50AM');
+INSERT INTO Showtimes VALUES(3, 'Gladiator II', 'Standard', 'Cinemark', '111 East Joppa Road, Towson, MD, 21286', 18.43, 'Thursday 1:25PM');
+INSERT INTO Showtimes VALUES(4, 'Gladiator II', 'Standard', 'AMC', '8141 Honeygo Blvd, Baltimore, MD, 21236', 13.19, 'Wednesday 1:00PM');
+INSERT INTO Showtimes VALUES(5, 'Venom: The Last Dance', 'Standard', 'AMC', '8141 Honeygo Blvd, Baltimore, MD, 21236', 17.59, 'Tuesday 7:46PM');
+INSERT INTO Showtimes VALUES(6, 'Moana 2', 'Standard', 'Regal', '900 Ellsworth Drive, Silver Spring, MD, 20910', 17.49, 'Friday 1:00PM');
+
+INSERT INTO TheatreServices VALUES (111111, 'Offered', 'Offered', 'Heated recliner', 'Not Offered');
+INSERT INTO TheatreServices VALUES (222222, 'Offered', 'Offered', 'Recliner', 'Not Offered');
+INSERT INTO TheatreServices VALUES (333333, 'Offered', 'Offered', 'Heating and cooling', 'Offered');
+INSERT INTO TheatreServices VALUES (444444, 'Offered', 'Offered', 'Recliner', 'Offered');
+INSERT INTO TheatreServices VALUES (555555, 'Offered', 'Offered', 'Heated recliner', 'Not Offered');
+
+INSERT INTO Employee VALUES (101, 'Jay', 'Auerhan', 'CEO', 500000, '3 months');
+INSERT INTO Employee VALUES (202, 'Alex', 'Anthony', 'COO', 500000, '3 months');
+INSERT INTO Employee VALUES (303, 'Vanessa', 'Thompson', 'Manager', 60000, '2 weeks');
+INSERT INTO Employee VALUES (404, 'Kevin', 'Evans', 'Customer Service', 40000, '1 month');
+INSERT INTO Employee VALUES (505, 'Sophie', 'Andersen', 'DB Developer', 45000, '2 months');
+
+INSERT INTO Customer VALUES ('jayauerhan', '410-354-7454', 'jauerha1@students.towson.edu', '333 You Thought Circuit, Baltimore, MD, 21208', 'Historical', 150);
+INSERT INTO Customer VALUES ('alexanthony', '410-877-9393', 'aantho15@students.towson.edu', '332 You Thought Circuit, Baltimore, MD, 21208', 'Comedy', 95);
+INSERT INTO Customer VALUES ('sydbeech2', '410-666-2227', 'sydbeech2@gmail.com', '877 Willow Glen Road, Baltimore, MD, 21208', 'Musical', 120);
+INSERT INTO Customer VALUES ('HPFan934', '443-225-2525', 'jasonbourne@icloud.com', '241 Secret Street, Baltimore, MD, 21208', 'Fantasy', 180);
+INSERT INTO Customer VALUES ('exampleguy', '410-353-1111', 'example@example.net', '123 Something Road, Baltimore, MD, 21208', 'Drama', 150);
+
+INSERT INTO Ticket VALUES (5, 'Venom: The Last Dance', 'Standard', 'jayauerhan', 'AMC', 2, 'F2-3');
+INSERT INTO Ticket VALUES (5, 'Venom: The Last Dance', 'Standard', 'alexanthony', 'AMC', 1, 'G5');
+INSERT INTO Ticket VALUES (2, 'Moana 2', 'Standard', 'sydbeech2', 'Cinemark', 3, 'H2-4');
+INSERT INTO Ticket VALUES (1, 'Wicked', 'IMAX', 'HPFan934', 'AMC', 2, 'B2-3');
+INSERT INTO Ticket VALUES (3, 'Gladiator II', 'Standard', 'exampleguy', 'Cinemark', 5, 'D1-5');
+
+/* Queries */
+
+/* How many Tickets are for venom */
+CREATE VIEW Venom_Tickets
+AS SELECT UserName,MovieTitle
+FROM Ticket
+WHERE MovieTitle = 'Venom: The Last Dance'
+GROUP BY UserName;
+/* How many users are watching a movie in standard format */
+SELECT COUNT(UserName), FilmFormat
+FROM Ticket
+WHERE FilmFormat = 'Standard';
+/* Display the list of names of customers who live in Baltimore */
+SELECT UserName, CustomerAddress
+FROM Customer
+WHERE CustomerAddress LIKE '%Baltimore, MD%';
+/* Display the list of movies that are Musicals */
+SELECT MovieTitle, Genre
+FROM Movie
+WHERE genre = 'Musical'
+GROUP BY MovieTitle;
+/* How many movies in total are rated PG? */
+SELECT FilmRating,Count(FilmRating) as FilmRatingSum
+FROM Movie
+WHERE FilmRating = 'PG';
